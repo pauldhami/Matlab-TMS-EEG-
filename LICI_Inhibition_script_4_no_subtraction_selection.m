@@ -194,9 +194,11 @@ end
 
 % Keep SP_file due to it being referenced for channel info
 
-clear LICI_elec PP_abs PP_adj PP_adj_abs PP_area PP_data PP_file ...
-    PP_file_name PP_list SP SP_TEP TP_abs SP_area SP_data ...
-    SP_file_chan_count SP_list Time1_index Time2_index ans h i k ...
+clear LICI_elec ...
+    PP_abs PP_adj PP_adj_abs PP_area PP_data PP_file ...
+    PP_file_name PP_list SP SP_TEP TP_abs...
+    SP_area SP_data SP_file_chan_count SP_list ...
+    Time1_index Time2_index ans h i k ...
     LICI_no_subtraction LICI_subtraction ...
     PP_TEP_no_subtraction PP_TEP_subtraction SP_abs
     
@@ -238,11 +240,14 @@ figure
 
 for i = 1:6
 subplot(3,2,i)
-PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
-plot(PP_TEP_no_sub([1010:1275])) 
-hold on
+%PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
+%plot(PP_TEP_no_sub([1010:1275])) 
+%hold on
 PP_TEP_sub = (abs(TMSEEG(i).PP_TEP_subtraction(:,10)));
-plot(PP_TEP_sub([1010:1275]), 'r')  
+plot(PP_TEP_sub([1010:1275]), 'r') 
+hold on
+SP_TEP = (abs(TMSEEG(i).SP_TEP(:,10))); 
+plot(SP_TEP([1010:1275]), 'g')
 title(TMSEEG(i).subjectID(1:7))
 end
 
