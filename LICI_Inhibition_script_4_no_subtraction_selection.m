@@ -245,7 +245,9 @@ clear LICI_elec ...
     SP_area SP_data SP_file_chan_count SP_list ...
     Time1_index Time2_index ans h i k ...
     LICI_no_subtraction LICI_subtraction ...
-    PP_TEP_no_subtraction PP_TEP_subtraction SP_abs
+    PP_TEP_no_subtraction PP_TEP_subtraction SP_abs ...
+    N100_min_time_index N100_max_time_index N100_min_value
+
 
 %%
 
@@ -258,11 +260,11 @@ LICI_no_subtraction_average = mean(LICI_each_subject_no_subtraction, 1);
 % Topo plotting resulting AVERAGED ACROSS SUBJECTS LICI results 
 
 
-avg = LICI_subtraction_average; 
+avg = N100_min_average; 
 
 figure
 subplot(2,1,1)
-topoplot(avg, SP_file.chanlocs); colorbar; caxis([-50 50])
+topoplot(avg, SP_file.chanlocs); colorbar; caxis([-5 5])
 title('LICI Inhibition (%) Topography Map', 'fontsize',16)
 
 subplot(2,1,2)
@@ -273,21 +275,21 @@ title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 16)
 
 %%
 
-% Test figures 
+% TEST FIGURE 
 
 figure
 
 for i = 1:6
-subplot(3,2,i)
-%PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
-%plot(PP_TEP_no_sub([1010:1275])) 
-%hold on
-PP_TEP_sub = (abs(TMSEEG(i).PP_TEP_subtraction(:,10)));
-plot(PP_TEP_sub([1010:1275]), 'r') 
-hold on
-SP_TEP = (abs(TMSEEG(i).SP_TEP(:,10))); 
-plot(SP_TEP([1010:1275]), 'g')
-title(TMSEEG(i).subjectID(1:7))
+    subplot(3,2,i)
+    PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
+    plot(PP_TEP_no_sub([1010:1275])) 
+    hold on
+    PP_TEP_sub = (abs(TMSEEG(i).PP_TEP_subtraction(:,10)));
+    plot(PP_TEP_sub(1010:1275), 'r') 
+    hold on
+    SP_TEP = (abs(TMSEEG(i).SP_TEP(:,10))); 
+    plot(SP_TEP(1010:1275), 'g')
+    title(TMSEEG(i).subjectID(1:7))
 end
 
 %%
@@ -304,5 +306,47 @@ for i = 1:6
     topoplot(TMSEEG(i).LICI_no_subtraction, SP_file.chanlocs)
     title('LICI no subtraction')
     caxis([-50 50])
+end
+
+%%
+
+% TOPOPLOT OF ONLY SIGNIFICANT CORRELATIONS
+elec_corr = zeros(1,60);
+info_cor = zeros(2,5);
+
+for elec = 1:60
+    info_cor = zeros(2,5);
+   
+    for i = 1:5
+        info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
+        info_cor(i,2) = TMSEEG(i).LICI_no_subtraction(elec);
+    end
+    
+    [R, P] = corrcoef(info_cor(:,1), info_cor(:,2)); 
+    if P(1,2) <= 0.05
+        elec_corr(elec) = R(1,2);
+    elseif P(1,2) > 0.05
+        elec_corr(elec) = 0
+    end
+end
+
+
+%%
+
+% CORRELATION TOPOPLOT
+elec_corr = zeros(1,60);
+info_cor = zeros(2,5);
+
+for elec = 1:60
+    info_cor = zeros(2,5);
+   
+    for i = 1:5
+        info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
+        info_cor(i,2) = TMSEEG(i).LICI_subtraction(elec);
+    end
+    
+    [R, P] = corrcoef(info_cor(:,1), info_cor(:,2)); 
+   
+    elec_corr(elec) = R(1,2);
 end
 
