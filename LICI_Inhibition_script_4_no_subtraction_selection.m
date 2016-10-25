@@ -260,11 +260,11 @@ LICI_no_subtraction_average = mean(LICI_each_subject_no_subtraction, 1);
 % Topo plotting resulting AVERAGED ACROSS SUBJECTS LICI results 
 
 
-avg = N100_min_average; 
+avg = LICI_no_subtraction_average; 
 
 figure
 subplot(2,1,1)
-topoplot(avg, SP_file.chanlocs); colorbar; caxis([-5 5])
+topoplot(avg, SP_file.chanlocs); colorbar; caxis([-40 40])
 title('LICI Inhibition (%) Topography Map', 'fontsize',16)
 
 subplot(2,1,2)
@@ -275,7 +275,9 @@ title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 16)
 
 %%
 
-% TEST FIGURE 
+% RECTIFIED (abs) waveform for LICI with/without subtraction, and SP
+
+%Choose electrode
 
 figure
 
@@ -292,12 +294,15 @@ for i = 1:6
     title(TMSEEG(i).subjectID(1:7))
 end
 
-%%
+%% 
+
+%Each subjects paired topography maps for LICI with and without subtraction
 
 
 
 for i = 1:6
-    figure 
+    figure
+    suptitle(TMSEEG(i).subjectID(1:7)) 
     subplot(1,2,1)
     topoplot(TMSEEG(i).LICI_subtraction, SP_file.chanlocs)
     title('LICI subtraction')
@@ -312,10 +317,9 @@ end
 
 % TOPOPLOT OF ONLY SIGNIFICANT CORRELATIONS
 elec_corr = zeros(1,60);
-info_cor = zeros(2,5);
 
 for elec = 1:60
-    info_cor = zeros(2,5);
+    info_cor = zeros(2,size(TMSEEG,2));
    
     for i = 1:5
         info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
@@ -330,15 +334,17 @@ for elec = 1:60
     end
 end
 
+figure
+topoplot(elec_corr, SP_file.chanlocs)
+
 
 %%
 
 % CORRELATION TOPOPLOT
 elec_corr = zeros(1,60);
-info_cor = zeros(2,5);
 
 for elec = 1:60
-    info_cor = zeros(2,5);
+    info_cor = zeros(2,size(TMSEEG,2));
    
     for i = 1:5
         info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
@@ -350,3 +356,5 @@ for elec = 1:60
     elec_corr(elec) = R(1,2);
 end
 
+figure
+topoplot(elec_corr, SP_file.chanlocs)
