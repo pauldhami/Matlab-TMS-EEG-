@@ -268,7 +268,7 @@ figure
 
 %LICI No Subtraction
 subplot(2,2,1)
-topoplot(LICI_no_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
+topoplot(LICI_no_subtraction_average, SP_file.chanlocs); colorbar; caxis([-50 50])
 title('LICI No Subtraction Inhibition (%)', 'fontsize',14)
 
 subplot(2,2,3)
@@ -277,7 +277,7 @@ title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14)
 
 %LICI Subtraction
 subplot(2,2,2)
-topoplot(LICI_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
+topoplot(LICI_subtraction_average, SP_file.chanlocs); colorbar; caxis([-50 50])
 title('LICI Subtraction Applied Inhibition (%)', 'fontsize',14)
 
 subplot(2,2,4)
@@ -310,16 +310,21 @@ figure
 
 for i = 1:6
     subplot(3,2,i)
+    
     PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
     plot(PP_TEP_no_sub([1010:1275])) 
     hold on
+    
     PP_TEP_sub = (abs(TMSEEG(i).PP_TEP_subtraction(:,10)));
     plot(PP_TEP_sub(1010:1275), 'r') 
+    
     hold on
     SP_TEP = (abs(TMSEEG(i).SP_TEP(:,10))); 
     plot(SP_TEP(1010:1275), 'g')
-    title(TMSEEG(i).subjectID(1:7))
+    
+    title(TMSEEG(i).subjectID(1:7), 'fontsize', 14)
 end
+legend('PP No Subtraction', 'PP Subtraction', 'SP'); 
 
 %% 
 
