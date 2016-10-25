@@ -200,6 +200,13 @@ for i = 1:size(SP_list,1)
     
 end
 
+%%
+
+% Averaging across subjects (average of each column in LICI_each_subject) 
+
+LICI_subtraction_average = mean(LICI_each_subject_subtraction, 1);
+LICI_no_subtraction_average = mean(LICI_each_subject_no_subtraction, 1); 
+
 %% 
 % N100 calculation for each subject, at each electrode 
 
@@ -250,26 +257,27 @@ clear LICI_elec ...
 
 
 %%
-
-% Averaging across subjects (average of each column in LICI_each_subject) 
-
-LICI_subtraction_average = mean(LICI_each_subject_subtraction, 1);
-LICI_no_subtraction_average = mean(LICI_each_subject_no_subtraction, 1); 
-
-%%
 % Topo plotting resulting AVERAGED ACROSS SUBJECTS LICI results 
 
-
-avg = LICI_no_subtraction_average; 
-
 figure
-subplot(2,1,1)
-topoplot(avg, SP_file.chanlocs); colorbar; caxis([-40 40])
-title('LICI Inhibition (%) Topography Map', 'fontsize',16)
 
-subplot(2,1,2)
-hist(avg)
-title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 16) 
+%LICI No Subtraction
+subplot(2,2,1)
+topoplot(LICI_no_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
+title('LICI No Subtraction Inhibition (%)', 'fontsize',18)
+
+subplot(2,2,3)
+hist(LICI_no_subtraction_average)
+title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14) 
+
+%LICI Subtraction
+subplot(2,2,2)
+topoplot(LICI_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
+title('LICI Subtraction Applied Inhibition (%)', 'fontsize',18)
+
+subplot(2,2,4)
+hist(LICI_subtraction_average)
+title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14) 
 
 
 
@@ -358,3 +366,9 @@ end
 
 figure
 topoplot(elec_corr, SP_file.chanlocs)
+
+%%
+
+
+figure; 
+pop_plottopo(TMSEEG(1).PP_TEP_no_subtraction, SP_file.chanlocs[1:60] , 0, 'ydir',1);
