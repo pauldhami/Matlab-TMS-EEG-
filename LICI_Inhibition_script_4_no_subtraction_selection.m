@@ -17,6 +17,17 @@
 
 % Still need to manually edit CS and TS timing for subtraction (line 120)
 
+
+% OCTOBER 24 :
+% FZ for subtraction and no subtraction for subject by subject with PP and
+% SP in each figure
+
+% Amplitude of N100 and correlation with LICI values and check how it
+% changes with subtraction vs no subtraction 
+
+
+
+%%
 Time1 = 50;
 Time2 = 275;
 pathin = '/Users/Prabh/Desktop/TMS_function_draft/files/LPFC_LICI/';
@@ -55,7 +66,8 @@ TMSEEG = struct('subjectID', {},...
     'PP_TEP_subtraction', {},...
     'LICI_subtraction', {},...
     'PP_TEP_no_subtraction', {},...
-    'LICI_no_subtraction', {}); 
+    'LICI_no_subtraction', {},...
+    'N100',{}); 
 
 
 %%
@@ -188,8 +200,41 @@ for i = 1:size(SP_list,1)
     
 end
 
-%%
+%% 
+% N100 calculation for each subject, at each electrode 
 
+N100_min_time = 90;
+N100_max_time = 130; 
+
+N100_each_subject_min = zeros(size(SP_list,1),size(SP_file_chan_count.chanlocs(1,1:end),2));
+
+for i = 1:size(SP_list,1)
+    
+    SP_file = pop_loadset('filename',...
+        SP_list(i).name,...
+        'filepath', pathin);
+    
+    SP_data = SP_file.data;
+    
+    N100_subject_min = zeros(1, numel(SP_data(:,1,1)));
+    
+    for h = 1:numel(SP_data(:,1,1))
+        
+        SP = mean(SP_data(h,:,:), 3);
+        N100_min_time_index = find(SP_file.times == N100_min_time);
+        N100_max_time_index = find(SP_file.times == N100_max_time);
+        N100_min_value = min(SP(N100_min_time_index:N100_max_time_index));
+        N100_subject_min(h) = N100_min_value;
+        N100_each_subject_min(i,h) = N100_min_value;
+    end
+    
+    TMSEEG(i).N100 = N100_subject_min;
+    
+end
+
+N100_min_average = mean(N100_each_subject_min, 1);
+
+%%
 %Clearing up workspace
 
 % Keep SP_file due to it being referenced for channel info
@@ -201,7 +246,6 @@ clear LICI_elec ...
     Time1_index Time2_index ans h i k ...
     LICI_no_subtraction LICI_subtraction ...
     PP_TEP_no_subtraction PP_TEP_subtraction SP_abs
-    
 
 %%
 
@@ -225,16 +269,11 @@ subplot(2,1,2)
 hist(avg)
 title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 16) 
 
-% FZ for subtraction and no subtraction for subject by subject with PP and
-% SP in each figure
-
-% Amplitude of N100 and correlation with LICI values and check how it
-% changes with subtraction vs no subtraction 
-
-
 
 
 %%
+
+% Test figures 
 
 figure
 
