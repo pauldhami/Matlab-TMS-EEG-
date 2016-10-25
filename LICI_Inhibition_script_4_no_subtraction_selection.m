@@ -256,7 +256,12 @@ clear LICI_elec ...
     N100_min_time_index N100_max_time_index N100_min_value
 
 
-%%
+%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ~~~~~~~~ Graphs and Figures ~~~~~~~~~ %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Topo plotting resulting AVERAGED ACROSS SUBJECTS LICI results 
 
 figure
@@ -264,7 +269,7 @@ figure
 %LICI No Subtraction
 subplot(2,2,1)
 topoplot(LICI_no_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
-title('LICI No Subtraction Inhibition (%)', 'fontsize',18)
+title('LICI No Subtraction Inhibition (%)', 'fontsize',14)
 
 subplot(2,2,3)
 hist(LICI_no_subtraction_average)
@@ -273,11 +278,25 @@ title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14)
 %LICI Subtraction
 subplot(2,2,2)
 topoplot(LICI_subtraction_average, SP_file.chanlocs); colorbar; caxis([-40 40])
-title('LICI Subtraction Applied Inhibition (%)', 'fontsize',18)
+title('LICI Subtraction Applied Inhibition (%)', 'fontsize',14)
 
 subplot(2,2,4)
 hist(LICI_subtraction_average)
-title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14) 
+title('Count of LICI Inhibition Values (%) Across Electrodes', 'fontsize', 14)
+
+%%
+
+% Topo plotting resulting AVERAGED ACROSS SUBJECTS N100 results 
+
+figure
+
+
+subplot(2,1,1)
+topoplot(N100_min_average, SP_file.chanlocs); colorbar; caxis([-6 6]) 
+title('N100 Results Averaged Across Subjects', 'fontsize', 18) 
+
+subplot(2,1,2)
+hist(N100_min_average)
 
 
 
@@ -352,9 +371,9 @@ topoplot(elec_corr, SP_file.chanlocs)
 elec_corr = zeros(1,60);
 
 for elec = 1:60
-    info_cor = zeros(2,size(TMSEEG,2));
+    info_cor = zeros(size(TMSEEG,2),2);
    
-    for i = 1:5
+    for i = 1:6
         info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
         info_cor(i,2) = TMSEEG(i).LICI_subtraction(elec);
     end
@@ -365,6 +384,7 @@ for elec = 1:60
 end
 
 figure
+title('Hello')
 topoplot(elec_corr, SP_file.chanlocs)
 
 %%
