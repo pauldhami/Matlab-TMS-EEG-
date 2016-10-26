@@ -308,11 +308,15 @@ hist(N100_min_average)
 
 figure
 
+%find(strcmp(A,'FZ'))
+
+Electrode = 'CZ';
+
 for i = 1:6
     subplot(3,2,i)
     
     PP_TEP_no_sub = (abs(TMSEEG(i).PP_TEP_no_subtraction(:,10))); 
-    plot(PP_TEP_no_sub([1010:1275])) 
+    plot(PP_TEP_no_sub(1010:1275)) 
     hold on
     
     PP_TEP_sub = (abs(TMSEEG(i).PP_TEP_subtraction(:,10)));
@@ -320,7 +324,7 @@ for i = 1:6
     
     hold on
     SP_TEP = (abs(TMSEEG(i).SP_TEP(:,10))); 
-    plot(SP_TEP(1010:1275), 'g')
+    plot(SP_TEP(1010:1275), '--k')
     
     title(TMSEEG(i).subjectID(1:7), 'fontsize', 14)
 end
@@ -335,14 +339,20 @@ legend('PP No Subtraction', 'PP Subtraction', 'SP');
 for i = 1:6
     figure
     suptitle(TMSEEG(i).subjectID(1:7)) 
-    subplot(1,2,1)
-    topoplot(TMSEEG(i).LICI_subtraction, SP_file.chanlocs)
+    
+    subplot(2,2,1)
+    topoplot(TMSEEG(i).LICI_subtraction, SP_file.chanlocs); colorbar
     title('LICI subtraction')
     caxis([-50 50])
-    subplot(1,2,2)
-    topoplot(TMSEEG(i).LICI_no_subtraction, SP_file.chanlocs)
+    subplot(2,2,3)
+    hist(TMSEEG(i).LICI_subtraction) 
+    
+    subplot(2,2,2)
+    topoplot(TMSEEG(i).LICI_no_subtraction, SP_file.chanlocs); colorbar
     title('LICI no subtraction')
     caxis([-50 50])
+    subplot(2,2,4)
+    hist(TMSEEG(i).LICI_no_subtraction) 
 end
 
 %%
@@ -373,8 +383,31 @@ topoplot(elec_corr, SP_file.chanlocs)
 %%
 
 % CORRELATION TOPOPLOT
+
 elec_corr = zeros(1,60);
 
+
+
+% Correlation between N100 and LICI No Subtraction
+for elec = 1:60
+    info_cor = zeros(size(TMSEEG,2),2);
+   
+    for i = 1:6
+        info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
+        info_cor(i,2) = TMSEEG(i).LICI_no_subtraction(elec);
+    end
+    
+    [R, P] = corrcoef(info_cor(:,1), info_cor(:,2)); 
+   
+    elec_corr(elec) = R(1,2);
+end
+
+figure
+title('Correlation between N100 and LICI with no subtraction', 'fontsize',16)
+colorbar; caxis([-1 1]) 
+topoplot(elec_corr, SP_file.chanlocs)
+
+% Correlation between N100 and LICI with Subtraction
 for elec = 1:60
     info_cor = zeros(size(TMSEEG,2),2);
    
@@ -389,8 +422,29 @@ for elec = 1:60
 end
 
 figure
-title('Hello')
+title('Correlation between N100 and LICI with subtraction', 'fontsize',16)
+colorbar; caxis([-1 1]) 
 topoplot(elec_corr, SP_file.chanlocs)
+
+% Correlation between LICI with and without subtraction
+for elec = 1:60
+    info_cor = zeros(size(TMSEEG,2),2);
+   
+    for i = 1:6
+        info_cor(i,1) = TMSEEG(i).LICI_no_subtraction(elec); %N100 value
+        info_cor(i,2) = TMSEEG(i).LICI_subtraction(elec);
+    end
+    
+    [R, P] = corrcoef(info_cor(:,1), info_cor(:,2)); 
+   
+    elec_corr(elec) = R(1,2);
+end
+
+figure
+title('Correlation between LICI with and without subtraction', 'fontsize',16)
+colorbar; caxis([-1 1]) 
+topoplot(elec_corr, SP_file.chanlocs)
+
 
 %%
 
