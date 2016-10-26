@@ -30,7 +30,7 @@
 %%
 Time1 = 50;
 Time2 = 275;
-pathin = '/Users/Prabh/Desktop/TMS_function_draft/files/LPFC_LICI/';
+pathin = '/Users/Prabh/Desktop/TMS_function_draft/files/RPFC_LICI/';
 
 %%
 
@@ -316,7 +316,7 @@ hist(N100_min_average)
 
 figure
 
-electrode_to_plot = 'FZ';
+electrode_to_plot = 'FCZ';
 
 electrode_to_plot = find(strcmp(chaninfo,electrode_to_plot));
 
@@ -398,7 +398,7 @@ elec_corr = zeros(1,60);
 for elec = 1:60
     info_cor = zeros(size(TMSEEG,2),2);
    
-    for i = 1:6
+    for i = 1:size(TMSEEG,2)
         info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
         info_cor(i,2) = TMSEEG(i).LICI_no_subtraction(elec);
     end
@@ -417,7 +417,7 @@ topoplot(elec_corr, SP_file.chanlocs)
 for elec = 1:60
     info_cor = zeros(size(TMSEEG,2),2);
    
-    for i = 1:6
+    for i = 1:size(TMSEEG,2)
         info_cor(i,1) = TMSEEG(i).N100(elec); %N100 value
         info_cor(i,2) = TMSEEG(i).LICI_subtraction(elec);
     end
@@ -436,7 +436,7 @@ topoplot(elec_corr, SP_file.chanlocs)
 for elec = 1:60
     info_cor = zeros(size(TMSEEG,2),2);
    
-    for i = 1:6
+    for i = 1:size(TMSEEG,2)
         info_cor(i,1) = TMSEEG(i).LICI_no_subtraction(elec); %N100 value
         info_cor(i,2) = TMSEEG(i).LICI_subtraction(elec);
     end
